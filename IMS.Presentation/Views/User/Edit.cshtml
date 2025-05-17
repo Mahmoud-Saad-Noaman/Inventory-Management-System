@@ -1,0 +1,104 @@
+﻿@model IMS.Application.DTOs.User.UserEditDto
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="container py-4">
+    <div class="bg-white p-4 rounded-4 shadow-sm animate__animated animate__fadeIn" style="max-width: 600px; margin: 0 auto;">
+
+        <h3 class="fw-semibold mb-4" style="color: #6c707de6;">Edit User</h3>
+
+        @* Validation Errors *@
+        @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+        {
+            <div class="text-danger small fw-semibold mb-3">
+                @Html.ValidationSummary(false)
+            </div>
+        }
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="UserID" />
+
+            <div class="mb-3">
+                <label asp-for="UserName" class="form-label">Username</label>
+                <input asp-for="UserName" class="form-control rounded-3" placeholder="Enter username" />
+                <span asp-validation-for="UserName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control rounded-3" placeholder="Enter email address" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" class="form-control rounded-3" type="password" placeholder="Leave empty to keep current password" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Role" class="form-label">Role</label>
+                <select asp-for="Role" id="Role" class="form-select rounded-3">
+                    <option value="">Select Role</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Employee">Employee</option>
+                </select>
+                <span asp-validation-for="Role" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4" id="manager-id-group">
+                <label asp-for="ManagerID" class="form-label">Manager</label>
+                <select asp-for="ManagerID" id="ManagerID" class="form-select rounded-3" asp-items="ViewBag.Managers">
+                    <option value="">Select Manager</option>
+                </select>
+                <span asp-validation-for="ManagerID" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input asp-for="IsActive" class="form-check-input" type="checkbox" id="IsActive" />
+                    <label asp-for="IsActive" class="form-check-label">Is Active</label>
+                </div>
+                <span asp-validation-for="IsActive" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                    <i class="align-middle me-1" data-feather="save"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold">
+                    <i class="align-middle me-1" data-feather="arrow-left"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            feather.replace();
+
+            function toggleManagerField() {
+                var role = $('#Role').val();
+                var $managerGroup = $('#manager-id-group');
+                var $managerSelect = $('#ManagerID');
+
+                if (role === 'Admin') {
+                    $managerGroup.hide();
+                    $managerSelect.prop('disabled', true);
+                } else {
+                    $managerGroup.show();
+                    $managerSelect.prop('disabled', false);
+                }
+            }
+
+            $('#Role').change(toggleManagerField);
+            toggleManagerField();
+        });
+    </script>
+}

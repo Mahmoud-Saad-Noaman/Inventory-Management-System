@@ -1,0 +1,168 @@
+﻿@model IMS.Application.DTOs.Transactions.CreateWarehouseTransferDto
+
+@{
+    ViewData["Title"] = "Transfer Between Warehouses";
+}
+
+<div class="container py-4">
+    <div class="bg-white p-4 rounded-4 shadow-sm animate__animated animate__fadeIn" style="max-width: 800px; margin: 0 auto;">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-semibold mb-0 text-primary">
+                <i data-feather="repeat" class="me-2" style="width: 22px; height: 22px;"></i> Transfer Between Warehouses
+            </h3>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success small rounded-3 py-2 px-3 mb-3">@TempData["Success"]</div>
+        }
+
+        @if (TempData["error"] != null)
+        {
+            <div class="alert alert-danger small rounded-3 py-2 px-3 mb-3">@TempData["error"]</div>
+        }
+
+        @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+        {
+            <div class="alert alert-danger small rounded-3 py-2 px-3 mb-3">
+                <ul class="mb-0 ps-3">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form asp-action="TransferBetweenWarehouses" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="FromWarehouseId" class="form-label fw-semibold">From Warehouse</label>
+                        <select asp-for="FromWarehouseId" asp-items="ViewBag.Warehouses" class="form-select" onchange="updateSourceProducts()">
+                            <option value="">-- Select Source Warehouse --</option>
+                        </select>
+                        <span asp-validation-for="FromWarehouseId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FromProductId" class="form-label fw-semibold">Source Product</label>
+                        <select asp-for="FromProductId" class="form-select" onchange="updateDestinationProducts()">
+                            <option value="">-- Select Source Product --</option>
+                        </select>
+                        <span asp-validation-for="FromProductId" class="text-danger small"></span>
+                        <div id="sourceProductError" class="text-danger small" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="ToWarehouseId" class="form-label fw-semibold">To Warehouse</label>
+                        <select asp-for="ToWarehouseId" asp-items="ViewBag.Warehouses" class="form-select" onchange="updateDestinationProducts()">
+                            <option value="">-- Select Destination Warehouse --</option>
+                        </select>
+                        <span asp-validation-for="ToWarehouseId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ToProductId" class="form-label fw-semibold">Destination Product</label>
+                        <select asp-for="ToProductId" class="form-select">
+                            <option value="">-- Select Destination Product --</option>
+                        </select>
+                        <span asp-validation-for="ToProductId" class="text-danger small"></span>
+                        <div id="destinationProductError" class="text-danger small" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Quantity" class="form-label fw-semibold">Quantity</label>
+                <input asp-for="Quantity" class="form-control" type="number" min="1" />
+                <span asp-validation-for="Quantity" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold" >
+                    <i class="align-middle me-1" data-feather="plus"></i> Transfer
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold">
+                    <i class="align-middle me-1" data-feather="x"></i> Cancel
+                </a>
+            </div>
+
+            
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateSourceProducts() {
+            var fromWarehouseId = $('#FromWarehouseId').val();
+            var sourceError = $('#sourceProductError');
+            var destinationError = $('#destinationProductError');
+            sourceError.hide();
+            destinationError.hide();
+
+            if (fromWarehouseId) {
+                $.ajax({
+                    url: '@Url.Action("GetProductsByWarehouse", "Transactions")',
+                    type: 'GET',
+                    data: { warehouseId: fromWarehouseId },
+                    success: function (data) {
+                        var sourceSelect = $('#FromProductId');
+                        sourceSelect.empty().append('<option value="">-- Select Source Product --</option>');
+                        if (data.length === 0) {
+                            sourceError.text("No products found in source warehouse.").show();
+                        } else {
+                            $.each(data, function (i, item) {
+                                sourceSelect.append('<option value="' + item.productID + '">' + item.displayText + '</option>');
+                            });
+                        }
+                        $('#ToProductId').empty().append('<option value="">-- Select Destination Product --</option>');
+                        updateDestinationProducts();
+                    },
+                    error: function () {
+                        sourceError.text("Error fetching source products.").show();
+                    }
+                });
+            }
+        }
+
+        function updateDestinationProducts() {
+            var productId = $('#FromProductId').val();
+            var toWarehouseId = $('#ToWarehouseId').val();
+            var destinationError = $('#destinationProductError');
+            destinationError.hide();
+
+            if (productId && toWarehouseId) {
+                $.ajax({
+                    url: '@Url.Action("GetMatchingProducts", "Transactions")',
+                    type: 'GET',
+                    data: { productId: productId, toWarehouseId: toWarehouseId },
+                    success: function (data) {
+                        var toSelect = $('#ToProductId');
+                        toSelect.empty().append('<option value="">-- Select Destination Product --</option>');
+                        if (data.length === 0) {
+                            destinationError.text("No matching destination products found.").show();
+                        } else {
+                            $.each(data, function (i, item) {
+                                toSelect.append('<option value="' + item.productID + '">' + item.displayText + '</option>');
+                            });
+                        }
+                    },
+                    error: function () {
+                        destinationError.text("Error fetching destination products.").show();
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            updateSourceProducts();
+        });
+    </script>
+}

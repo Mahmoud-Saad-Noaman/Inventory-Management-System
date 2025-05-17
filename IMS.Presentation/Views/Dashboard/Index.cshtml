@@ -1,0 +1,376 @@
+﻿@model IMS.Application.DTOs.DashboardDto
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="container-fluid p-3 bg-light" style="min-height: 100vh;">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-primary fw-bold mb-3" style="font-size: 1.5rem;">Inventory Dashboard</h2>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-2">
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #42a5f5;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-users fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Total Users</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue" id="totalUsers">@Model.TotalUsers</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #66bb6a;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-boxes fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Total Products</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="totalProducts">@Model.TotalProducts</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #42a5f5;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-clipboard-list fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Total Orders</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem;color: aliceblue;" id="totalOrders">@Model.TotalOrders</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #ffca28;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-dollar-sign fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Total Revenue</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="totalRevenue">@Model.TotalRevenue.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Status Cards -->
+    <div class="row g-2 mt-2">
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #66bb6a;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-check-circle fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Completed Orders</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.1rem; color: aliceblue;" id="completedOrders">@Model.CompletedOrders (<span id="completedOrdersPercent">@Model.CompletedOrdersPercent%</span>)</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #5c6bc0;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-truck fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">InTransit Orders</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.1rem; color: aliceblue;" id="inTransit">@Model.InTransitOrders (<span id="inTransitPercent">@Model.InTransitOrdersPercent%</span>)</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #ffa726;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-clock fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Pending Orders</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.1rem; color: aliceblue;" id="pendingOrders">@Model.PendingOrders (<span id="pendingOrdersPercent">@Model.PendingOrdersPercent%</span>)</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #ef5350;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-times-circle fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Canceled Orders</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.1rem; color: aliceblue;" id="canceledOrders">@Model.CanceledOrders (<span id="canceledOrdersPercent">@Model.CanceledOrdersPercent%</span>)</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #ab47bc;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-cog fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Processing Orders</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.1rem; color: aliceblue;" id="processingOrders">@Model.ProcessingOrders (<span id="processingOrdersPercent">@Model.ProcessingOrdersPercent%</span>)</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Cards -->
+    <div class="row g-2 mt-2">
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #78909c;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-exclamation-triangle fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Low Stock Items</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="lowStockItems">@Model.LowStockItems</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #42a5f5;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-exchange-alt fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Recent Transactions</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="recentTransactions">@Model.RecentTransactions</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #26a69a;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-calculator fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Inventory Value</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="inventoryValue">@Model.InventoryValue.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm border-0" style="background: #66bb6a;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-user-plus fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">New Customers (Month)</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="newCustomersThisMonth">@Model.NewCustomersThisMonth</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Cards -->
+    <div class="row g-2 mt-2">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0" style="background: #66bb6a;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-arrow-down fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">In Transactions</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="inTransactions">@Model.InTransactions</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0" style="background: #ef5350;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-arrow-up fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Out Transactions</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="outTransactions">@Model.OutTransactions</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0" style="background: #42a5f5;">
+                <div class="card-body text-center text-white">
+                    <i class="fas fa-truck-loading fa-lg mb-1"></i>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;">Warehouse Transfers</p>
+                    <h3 class="card-title mb-0" style="font-size: 1.25rem; color: aliceblue;" id="warehouseTransfers">@Model.WarehouseTransfers</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts with Fixed Height Containers -->
+    <div class="row g-2 mt-2">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body p-2" style="height: 250px;">
+                    <p class="card-text text-muted mb-1" style="font-size: 0.85rem;">Order Status Distribution</p>
+                    <div style="height: calc(100% - 20px);">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body p-2" style="height: 250px;">
+                    <p class="card-text text-muted mb-1" style="font-size: 0.85rem;">Inventory Trend</p>
+                    <div style="height: calc(100% - 20px);">
+                        <canvas id="inventoryTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Insights -->
+    <div class="row g-2 mt-2">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center p-2">
+                    <i class="fas fa-box-open fa-2x mb-1 text-primary"></i>
+                    <p class="card-text text-muted mb-1" style="font-size: 0.85rem;">Most Stocked Product</p>
+                    <h4 class="card-title mb-0" style="font-size: 1.1rem;" id="mostStockedProduct">@Model.MostStockedProduct</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center p-2">
+                    <i class="fas fa-box fa-2x mb-1 text-warning"></i>
+                    <p class="card-text text-muted mb-1" style="font-size: 0.85rem;">Least Stocked Product</p>
+                    <h4 class="card-title mb-0" style="font-size: 1.1rem;" id="leastStockedProduct">@Model.LeastStockedProduct</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/dashboardHub")
+            .build();
+
+        connection.on("UpdateDashboard", function (data) {
+            document.getElementById("totalUsers").innerText = data.totalUsers;
+            document.getElementById("totalProducts").innerText = data.totalProducts;
+            document.getElementById("totalOrders").innerText = data.totalOrders;
+            document.getElementById("totalRevenue").innerText = data.totalRevenue.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+            document.getElementById("completedOrders").innerText = data.completedOrders;
+            document.getElementById("completedOrdersPercent").innerText = `(${data.completedOrdersPercent}%)`;
+            document.getElementById("inTransit").innerText = data.inTransitOrders;
+            document.getElementById("inTransitPercent").innerText = `(${data.inTransitOrdersPercent}%)`;
+            document.getElementById("pendingOrders").innerText = data.pendingOrders;
+            document.getElementById("pendingOrdersPercent").innerText = `(${data.pendingOrdersPercent}%)`;
+            document.getElementById("canceledOrders").innerText = data.canceledOrders;
+            document.getElementById("canceledOrdersPercent").innerText = `(${data.canceledOrdersPercent}%)`;
+            document.getElementById("processingOrders").innerText = data.processingOrders;
+            document.getElementById("processingOrdersPercent").innerText = `(${data.processingOrdersPercent}%)`;
+            document.getElementById("lowStockItems").innerText = data.lowStockItems;
+            document.getElementById("recentTransactions").innerText = data.recentTransactions;
+            document.getElementById("inventoryValue").innerText = data.inventoryValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+            document.getElementById("newCustomersThisMonth").innerText = data.newCustomersThisMonth;
+            document.getElementById("inTransactions").innerText = data.inTransactions;
+            document.getElementById("outTransactions").innerText = data.outTransactions;
+            document.getElementById("warehouseTransfers").innerText = data.warehouseTransfers;
+            document.getElementById("mostStockedProduct").innerText = data.mostStockedProduct;
+            document.getElementById("leastStockedProduct").innerText = data.leastStockedProduct;
+
+            orderStatusChart.data.datasets[0].data = [
+                data.completedOrders, 
+                data.inTransitOrders,
+                data.pendingOrders, 
+                data.canceledOrders, 
+                data.processingOrders
+            ];
+            orderStatusChart.update();
+            inventoryTrendChart.data.datasets[0].data = [1200, 1900, 1500, 2000, data.totalInventory, 2200];
+            inventoryTrendChart.update();
+        });
+
+        connection.start().catch(function (err) {
+            console.error(err.toString());
+        });
+
+        const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+        const orderStatusChart = new Chart(orderStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'InTransit', 'Pending', 'Canceled', 'Processing'],
+                datasets: [{
+                    data: [
+                        @Model.CompletedOrders, 
+                        @Model.InTransitOrders,
+                        @Model.PendingOrders, 
+                        @Model.CanceledOrders, 
+                        @Model.ProcessingOrders
+                    ],
+                    backgroundColor: ['#66bb6a', '#5c6bc0', '#ffa726', '#ef5350', '#ab47bc']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { 
+                        position: 'right',
+                        labels: {
+                            font: {
+                                size: 10
+                            },
+                            boxWidth: 10
+                        }
+                    }
+                }
+            }
+        });
+
+        const inventoryTrendCtx = document.getElementById('inventoryTrendChart').getContext('2d');
+        const inventoryTrendChart = new Chart(inventoryTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Total Inventory',
+                    data: [1200, 1900, 1500, 2000, @Model.TotalInventory, 2200],
+                    borderColor: '#42a5f5',
+                    backgroundColor: 'rgba(66, 165, 245, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { 
+                    y: { 
+                        beginAtZero: false,
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    }
+                },
+                plugins: { 
+                    legend: { 
+                        display: false
+                    } 
+                }
+            }
+        });
+    </script>
+    <style>
+        .card { 
+            transition: transform 0.2s; 
+            border-radius: 8px; 
+            border: none;
+        }
+        .card:hover { 
+            transform: scale(1.03); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .card-body {
+            padding: 1rem;
+        }
+        .card-title {
+            font-weight: 600;
+        }
+        .card-text {
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+        .container-fluid {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+}
